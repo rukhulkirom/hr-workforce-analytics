@@ -5,16 +5,13 @@ Analytical View
 =========================================================
 
 Purpose:
-    Create an analytical view for HR workforce and
-    employee attrition analysis.
+    Create a reusable analytical view for HR workforce
+    and attrition analysis.
 
 Source:
     hr.employee_attrition
 
-Output:
-    hr.vw_employee_attrition
-
-Derived fields:
+Derived Fields:
     - attrition_flag
     - age_group
     - income_band
@@ -25,41 +22,60 @@ Derived fields:
 =========================================================
 */
 
-CREATE OR REPLACE VIEW hr.vw_employee_attrition AS
+DROP VIEW IF EXISTS hr.vw_employee_attrition;
+
+CREATE VIEW hr.vw_employee_attrition AS
 SELECT
+    -- Employee Information
     employee_number,
     age,
     attrition,
+    gender,
+    marital_status,
+
+    -- Work Information
     business_travel,
     department,
-    distance_from_home,
+    job_level,
+    job_role,
     education,
     education_field,
-    gender,
-    job_role,
-    marital_status,
+
+    -- Satisfaction & Engagement
+    job_satisfaction,
+    environment_satisfaction,
+    job_involvement,
+    relationship_satisfaction,
+    work_life_balance,
+
+    -- Compensation & Benefits
     monthly_income,
-    num_companies_worked,
-    over_time,
+    hourly_rate,
+    monthly_rate,
     percent_salary_hike,
     performance_rating,
-    relationship_satisfaction,
     stock_option_level,
+
+    -- Workload
+    over_time,
+    distance_from_home,
+
+    -- Career & Experience
+    num_companies_worked,
     total_working_years,
-    training_times_last_year,
-    work_life_balance,
     years_at_company,
     years_in_current_role,
     years_since_last_promotion,
     years_with_curr_manager,
+    training_times_last_year,
 
-    -- Attrition flag
+    -- Attrition Flag
     CASE
         WHEN attrition = 'Yes' THEN 1
         ELSE 0
     END AS attrition_flag,
 
-    -- Age group
+    -- Age Group
     CASE
         WHEN age < 30 THEN 'Under 30'
         WHEN age BETWEEN 30 AND 39 THEN '30-39'
@@ -67,7 +83,7 @@ SELECT
         ELSE '50+'
     END AS age_group,
 
-    -- Income band
+    -- Income Band
     CASE
         WHEN monthly_income < 3000 THEN 'Low'
         WHEN monthly_income < 6000 THEN 'Medium'
@@ -75,7 +91,7 @@ SELECT
         ELSE 'Very High'
     END AS income_band,
 
-    -- Company tenure group
+    -- Company Tenure Group
     CASE
         WHEN years_at_company < 2 THEN 'Less than 2 years'
         WHEN years_at_company < 5 THEN '2-4 years'
@@ -83,7 +99,7 @@ SELECT
         ELSE '10+ years'
     END AS tenure_group,
 
-    -- Total experience group
+    -- Total Experience Group
     CASE
         WHEN total_working_years < 5 THEN 'Entry'
         WHEN total_working_years < 10 THEN 'Early Career'
@@ -91,7 +107,7 @@ SELECT
         ELSE 'Experienced'
     END AS experience_group,
 
-    -- Overtime flag
+    -- Overtime Flag
     CASE
         WHEN over_time = 'Yes' THEN 1
         ELSE 0
