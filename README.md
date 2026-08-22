@@ -713,6 +713,7 @@ hr-workforce-analytics/
 │   └── dashboard_risk_segmentation.png
 │
 ├── reports/
+│   └── business_insights.md
 │
 ├── src/
 │   ├── database.py
